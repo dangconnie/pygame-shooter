@@ -3,7 +3,11 @@
 
 import pygame;
 # import sys so that we can halt our program. Sys is a part of core so no need to install
-import sys;
+# import sys;
+
+import time;
+
+from game_functions import check_events, update_screen;
 
 # import hero class
 from hero import Hero;
@@ -13,8 +17,14 @@ from settings import Settings;
 
 from pygame.sprite import Group, groupcollide;
 
+from enemy import Enemy;
+
 # bring in bullets module
-from bullet import Bullet;
+# from bullet import Bullet;
+
+# Test static function
+# from game_functions import utility_functions;
+# utility_functions.check_events();
 
 # Core game functionality
 def run_game():
@@ -36,35 +46,45 @@ def run_game():
 	# Create a hero object from our hero class
 	the_hero = Hero('images/hero.png', screen);
 
+	# to make hero group 
+	the_hero_group = Group();
+	the_hero_group.add(the_hero);
+
 	# Make a group for the bullets to live in
 	bullets = Group();
-	new_bullet = Bullet(screen, the_hero, game_settings);
-	bullets.add(new_bullet);
+	# we only want to add a bullet in check_events
+	# new_bullet = Bullet(screen, the_hero, game_settings);
+	# bullets.add(new_bullet);
+
+	enemies = Group();
+	# on a certain time, we want to add a new enemy
+
+	game_start_time = time.time();
+	print game_start_time;
 
 	# Make the main game loop...it will run forever...
 	while 1:
-		# Pygame automativally creates and event queue(like just)
-		# We want to patch into certain events (like click, keypress, quit...)
-		for event in pygame.event.get():
-			# Check to see if the event that occurred is the quit event
-			if event.type == pygame.QUIT:
-				# The user clicked the red X. Stop the game. User wants off
-				sys.exit();
 		# Create a tuple for the background color. It's in RGB format (0 is no red, green or blue)
 		# bg_color = (82, 111, 53);
 		# bg_img = "images/alice_in_wonderland_bkgd.jpg";
 		# Actually fill in the screen
 		screen.fill(game_settings.bg_color);
 
-		the_hero.draw_me();
+		# time between unix time stamp and when we started the game
+		game_settings.timer = (time.time() - game_start_time);
+		# print game_settings.timer;
+		# let's print number of seconds that have passed
+		# print int(game_settings.timer);
 
-		# loop through all bullets in the bullets group. call the one we're on "bullet"
-		for bullet in bullets.sprites():
-			bullet.update();
-			bullet.draw_bullet();
+		if int(game_settings.timer) % 5 == 0:
+			# add new enemy to group after a certain time
+			enemies.add(Enemy(screen, game_settings));
 
-		# flip the screen, i.e. wipe it out so that pygame can redraw
-		pygame.display.flip();
+		# line below calls game_functions module
+		check_events(screen, the_hero, game_settings, bullets, enemies);
+
+		update_screen(screen, the_hero, game_settings, bullets, enemies);
+
 
 # Run the game!
 run_game();

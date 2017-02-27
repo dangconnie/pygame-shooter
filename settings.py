@@ -8,5 +8,6 @@ class Settings():
 		self.bullet_height = 10;
 		self.bullet_color = (0,0,0);
 		self.bullet_speed = 5;
+		self.timer = 0;
 
 		self.game_active = False;

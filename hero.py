@@ -36,7 +36,7 @@ class Hero(Sprite):
 		# get vertical center of screen to self the rect of "self" (the hero)
 		self.rect.centery = self.screen_rect.centery;
 
-		# Set tje left side of the this object to the left side of the screen
+		# Set the left side of the this object to the left side of the screen
 		self.rect.left = self.screen_rect.left;
 
 	def draw_me(self):
